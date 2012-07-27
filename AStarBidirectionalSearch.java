@@ -10,12 +10,16 @@ import java.util.SortedSet;
 
 import aima.core.agent.Action;
 import aima.core.search.framework.BidirectionalProblem;
+import aima.core.search.framework.EvaluationFunction;
 import aima.core.search.framework.GraphSearch;
+import aima.core.search.framework.HeuristicFunction;
 import aima.core.search.framework.Metrics;
 import aima.core.search.framework.Node;
 import aima.core.search.framework.Problem;
+import aima.core.search.framework.QueueSearch;
 import aima.core.search.framework.Search;
 import aima.core.search.framework.SearchUtils;
+import aima.core.search.informed.AStarEvaluationFunction;
 import aima.core.util.datastructure.FIFOQueue;
 import aima.core.util.datastructure.PriorityQueue;
 
@@ -50,9 +54,25 @@ public class AStarBidirectionalSearch implements Search {
 	private static final String MAX_QUEUE_SIZE = "maxQueueSize";
 
 	private static final String PATH_COST = "pathCost";
+	
+	private final EvaluationFunction evaluationFunction;
 
-	public AStarBidirectionalSearch() {
+	public AStarBidirectionalSearch(HeuristicFunction hf) {
 		metrics = new Metrics();
+		this.evaluationFunction = new AStarEvaluationFunction(hf);
+	}
+	
+	protected Comparator<Node> getComparator() {
+		Comparator<Node> f = new Comparator<Node>() {
+			public int compare(Node n1, Node n2) {
+				Double f1 = evaluationFunction.f(n1);
+				Double f2 = evaluationFunction.f(n2);
+
+				return f1.compareTo(f2);
+			}
+		};
+
+		return f;
 	}
 
 	public List<Action> search(Problem p) throws Exception {
@@ -65,9 +85,10 @@ public class AStarBidirectionalSearch implements Search {
 
 		Problem op = ((BidirectionalProblem) p).getOriginalProblem();
 		Problem rp = ((BidirectionalProblem) p).getReverseProblem();
+		
 
-		CachedStateQueue<Node> opFrontier = new CachedStateQueue<Node>();
-		CachedStateQueue<Node> rpFrontier = new CachedStateQueue<Node>();
+		CachedStatePriorityQueue<Node> opFrontier = new CachedStatePriorityQueue<Node>(5,getComparator());
+		CachedStatePriorityQueue<Node> rpFrontier = new CachedStatePriorityQueue<Node>(5,getComparator());
 
 		GraphSearch ogs = new GraphSearch();
 		GraphSearch rgs = new GraphSearch();
@@ -461,7 +482,7 @@ class CachedStatePriorityQueue<E> extends PriorityQueue<E> {
 	
 }
 
-class CachedStateQueue<E> extends FIFOQueue<E> {
+/*class CachedStateQueue<E> extends FIFOQueue<E> {
 	private static final long serialVersionUID = 1;
 	//
 	private Map<Object, Node> cachedState = new HashMap<Object, Node>();
@@ -511,3 +532,4 @@ class CachedStateQueue<E> extends FIFOQueue<E> {
 		return super.addAll(c);
 	}
 }
+*/
