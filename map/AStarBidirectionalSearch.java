@@ -1,4 +1,4 @@
-package info2.wumpusworld;
+package info2.wumpusworld.map;
 
 import java.util.ArrayList;
 import java.util.Collection;
