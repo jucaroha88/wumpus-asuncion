@@ -9,6 +9,9 @@ import aima.core.agent.EnvironmentView;
 
 public class WumpusWorld {
 	public static void main(String[] args) {
+		String problemsfile = "";
+		String osmfile = "";
+		String mappingfile = "";
 		// TODO cargar mundo de wumpus desde archivo
 		Environment env = new WumpusEnvironment();
 		WumpusLocTrackEnvView view= new WumpusLocTrackEnvView();

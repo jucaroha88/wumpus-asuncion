@@ -5,6 +5,9 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import edu.uca.info2.components.ObjetoPosicionable;
+import edu.uca.info2.components.Problem;
+
 import aima.core.agent.Action;
 import aima.core.agent.Agent;
 import aima.core.agent.EnvironmentObject;
@@ -46,6 +49,18 @@ public class WumpusEnvironment extends AbstractEnvironment {
 		addObjectToLocation(new PitEnvObject(), new XYLocation(4,1));
 		addObjectToLocation(new PitEnvObject(), new XYLocation(3,2));
 		addObjectToLocation(new PitEnvObject(), new XYLocation(3,4));
+	}
+	
+	public WumpusEnvironment(edu.uca.info2.components.Problem problem){
+		ObjetoPosicionable op=null;
+		op = problem.getWumpus();
+		if(op != null)
+			addObjectToLocation(new WumpusEnvObject(), WumpusUtils.ObjetoPosicionableToXYLocation(op));
+		op=problem.getGold();
+		if(op != null)
+			addObjectToLocation(new GoldEnvObject(), WumpusUtils.ObjetoPosicionableToXYLocation(op));
+		for(ObjetoPosicionable pit : problem.getPits())
+			addObjectToLocation(new PitEnvObject(), WumpusUtils.ObjetoPosicionableToXYLocation(pit));
 	}
 	
 	@Override
