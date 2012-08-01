@@ -88,7 +88,7 @@ public class ModifiedMiniNaviApp implements ActionListener {
 		locator = new GpsLocator();
 		locator.addGpsPositionListener(new MyGpsPositionListener());
 		routeCalculator = (BidirectionalAStarRouteCalculator) createComponent(
-				ROUTECALCULATOR_CLASS_PROPERTY, RouteCalculator.class);
+				ROUTECALCULATOR_CLASS_PROPERTY, BidirectionalAStarRouteCalculator.class);
 		if (routeCalculator == null)
 			routeCalculator = new BidirectionalAStarRouteCalculator();
 

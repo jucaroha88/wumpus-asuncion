@@ -1,6 +1,8 @@
 package info2.wumpusworld.map;
 
 
+import info2.wumpusworld.environment.WumpusUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ import aimax.osm.data.MapWayAttFilter;
 import aimax.osm.data.MapWayFilter;
 import aimax.osm.data.Position;
 import aimax.osm.data.entities.MapNode;
+import aimax.osm.data.impl.DefaultMapNode;
 import aimax.osm.routing.OsmMoveAction;
 import aimax.osm.routing.OsmSldHeuristicFunction;
 import aimax.osm.routing.RouteFindingProblem;
@@ -50,12 +53,20 @@ public class BidirectionalAStarRouteCalculator {
 	 * @param waySelection
 	 *            Number, indicating which kinds of ways are relevant.
 	 */
-	public List<Position> calculateRoute(List<MapNode> locs, OsmMap map,
-			int waySelection) {
+	public List<Position> calculateRoute(List<MapNode> locs, OsmMap map,int waySelection) { //waySelection=1 es para car
 		List<Position> result = new ArrayList<Position>();
 		try {
 			MapWayFilter wayFilter = createMapWayFilter(map, waySelection);
 			boolean ignoreOneways = (waySelection == 0);
+			
+			/*{	//solo mientras tanto para generar el json
+				List<MapNode> ml = new ArrayList<MapNode>();
+				for(MapNode mn : locs){
+					ml.add(map.getNearestWayNode(new Position(mn), wayFilter));
+				}
+				WumpusUtils.MappingToFileFromMapNodeList(ml, map);
+			}*/
+			
 			MapNode fromNode = map.getNearestWayNode(new Position(locs
 					.get(0)), wayFilter);
 			result.add(new Position(fromNode.getLat(), fromNode.getLon()));
@@ -70,7 +81,6 @@ public class BidirectionalAStarRouteCalculator {
 				Problem problem = createProblem(fromNode, toNode, map,
 						wayFilter, ignoreOneways, waySelection);
 				
-				//Search search = new AStarSearch(new GraphSearch(), hf);
 				Search search = new AStarBidirectionalSearch(hf);
 				List<Action> actions = search.search(problem);
 				
