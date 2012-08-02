@@ -1,5 +1,10 @@
 package info2.wumpusworld;
 
+import java.io.IOException;
+import java.util.List;
+
+import edu.uca.info2.Problems;
+import edu.uca.info2.components.Problem;
 import info2.wumpusworld.environment.WumpusEnvironment;
 import info2.wumpusworld.environment.WumpusHardcodedAgent;
 import info2.wumpusworld.environment.WumpusLocTrackEnvView;
@@ -14,22 +19,22 @@ public class WumpusWorld {
 		String osmfile = "ulm.osm";
 		String mappingfile = "mapping.json";
 		
-		/*try{
-			WumpusUtils.ProblemsToFile("problems.json", WumpusUtils.GenerarProblemsDeEjemplo());
-		}catch(Exception e){
-			e.printStackTrace();
-		}*/
-		
-		
-		
 		// TODO cargar mundo de wumpus desde archivo
-		/*Environment env = new WumpusEnvironment();
-		WumpusLocTrackEnvView view= new WumpusLocTrackEnvView();
-		env.addEnvironmentView(view);
-		env.addAgent(new WumpusHardcodedAgent());
-		env.stepUntilDone();
-		
-		System.out.print(view.toString());*/
+		Problems problems = null;
+		try{
+			problems = WumpusUtils.ProblemsFromFile(problemsfile);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		List<Problem> pl=problems.getProblems();
+		for(Problem problem : pl){
+			Environment env = new WumpusEnvironment();
+			WumpusLocTrackEnvView view= new WumpusLocTrackEnvView();
+			env.addEnvironmentView(view);
+			env.addAgent(new WumpusHardcodedAgent());
+			env.stepUntilDone();
+			System.out.print(view.toString());
+		}
 		
 
 		// TODO generar lista de MapNode y calcular ruta

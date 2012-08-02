@@ -36,6 +36,11 @@ public class BidirectionalAStarRouteCalculator {
 	public String[] getWaySelectionOptions() {
 		return new String[] { "Distance", "Distance (Car)", "Distance (Bike)" };
 	}
+	
+	ArrayList<MapNode> findNodePath(MapNode fromNode, MapNode toNode){
+		return null;
+		
+	}
 
 	/**
 	 * Template method, responsible for shortest path generation between two map
@@ -102,6 +107,7 @@ public class BidirectionalAStarRouteCalculator {
 		}
 		return result;
 	}
+	
 
 	/** Factory method, responsible for way filter creation. */
 	protected MapWayFilter createMapWayFilter(OsmMap map, int waySelection) {
