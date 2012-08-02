@@ -339,7 +339,7 @@ public class AStarBidirectionalSearch implements Search {
 				// from the goal state (i.e. reverse path) but not the other way
 				// round, null returned to indicate an invalid path found from
 				// the reverse problem
-				return null;
+				//return null;
 			}
 
 			if (null == originalPath) {

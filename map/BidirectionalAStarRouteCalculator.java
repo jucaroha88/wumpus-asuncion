@@ -12,6 +12,7 @@ import java.util.List;
 import aima.core.agent.Action;
 import aima.core.environment.map.BidirectionalMapProblem;
 import aima.core.environment.map.Map;
+import aima.core.environment.map.MoveToAction;
 import aima.core.search.framework.BidirectionalProblem;
 import aima.core.search.framework.GraphSearch;
 import aima.core.search.framework.HeuristicFunction;
@@ -19,11 +20,15 @@ import aima.core.search.framework.Problem;
 import aima.core.search.framework.Search;
 import aima.core.search.informed.AStarSearch;
 import aima.core.util.CancelableThread;
+import aimax.osm.data.EntityVisitor;
 import aimax.osm.data.OsmMap;
 import aimax.osm.data.MapWayAttFilter;
 import aimax.osm.data.MapWayFilter;
 import aimax.osm.data.Position;
+import aimax.osm.data.entities.EntityAttribute;
+import aimax.osm.data.entities.EntityViewInfo;
 import aimax.osm.data.entities.MapNode;
+import aimax.osm.data.entities.WayRef;
 import aimax.osm.data.impl.DefaultMapNode;
 import aimax.osm.routing.OsmMoveAction;
 import aimax.osm.routing.OsmSldHeuristicFunction;
@@ -45,10 +50,10 @@ public class BidirectionalAStarRouteCalculator {
 			MapAdapter map_adapter = new MapAdapter(map);
 			HeuristicFunction hf = createHeuristicFunction(toNode,
 					map_adapter);
-			Problem problem = createProblem(fromNode, toNode, map,
-					wayFilter, ignoreOneways, waySelection);
 			
-			Search search = new AStarBidirectionalSearch(hf);
+/*			Problem problem = createProblem(fromNode, toNode, map,
+					wayFilter, ignoreOneways, waySelection);
+			Search search = new AStarSearch(new GraphSearch(), hf);
 			List<Action> actions = search.search(problem);
 			
 			ArrayList<MapNode> resultnodepath = new ArrayList<MapNode>();
@@ -59,12 +64,33 @@ public class BidirectionalAStarRouteCalculator {
 						OsmMoveAction a = (OsmMoveAction) action;
 						for (MapNode node : a.getNodes())
 							if (!node.equals(a.getFrom()))
-								/*result.add(new Position(node.getLat(), node
-										.getLon()));*/
 								resultnodepath.add(node);
 					}
 				}
+			}*/
+			Problem problem = createProblem(fromNode, toNode, map,
+					wayFilter, ignoreOneways, waySelection);
+			
+			Search search = new AStarBidirectionalSearch(hf);
+			List<Action> actions = search.search(problem);
+			
+			ArrayList<MapNode> resultnodepath = new ArrayList<MapNode>();
+			resultnodepath.add(fromNode);
+			if (!actions.isEmpty()){
+				for (Action action : actions) {
+					long id = Long.valueOf(((MoveToAction)action).getToLocation());
+					resultnodepath.add(new DefaultMapNode(id));
+					/*if (action instanceof OsmMoveAction) {
+						OsmMoveAction a = (OsmMoveAction) action;
+						for (MapNode node : a.getNodes())
+							if (!node.equals(a.getFrom()))
+								result.add(new Position(node.getLat(), node
+										.getLon()));
+								resultnodepath.add(node);
+					}*/
+				}
 			}
+			
 			return resultnodepath;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -156,11 +182,15 @@ public class BidirectionalAStarRouteCalculator {
 	}
 
 	/** Factory method, responsible for problem creation. */
+/*	protected Problem createProblem(MapNode fromNode, MapNode toNode,
+			OsmMap map, MapWayFilter wayFilter, boolean ignoreOneways,
+			int waySelection) {
+		return new RouteFindingProblem(fromNode, toNode, wayFilter,
+				ignoreOneways);
+	}*/
 	protected Problem createProblem(MapNode fromNode, MapNode toNode,
 			OsmMap map, MapWayFilter wayFilter, boolean ignoreOneways,
 			int waySelection) {
-		/*return new RouteFindingProblem(fromNode, toNode, wayFilter,
-				ignoreOneways);*/
 		Map map_adapter = new MapAdapter(map);
 		String initialstate = Long.toString(fromNode.getId());
 		String goalstate = Long.toString(toNode.getId());
