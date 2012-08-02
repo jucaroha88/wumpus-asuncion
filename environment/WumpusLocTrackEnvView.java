@@ -5,7 +5,10 @@ import info2.wumpusworld.plan.WumpusPlan;
 import info2.wumpusworld.plan.WumpusPlanAction;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,9 +69,10 @@ public class WumpusLocTrackEnvView implements EnvironmentView{
 			System.err.println("Map reading failed because input stream does not exist.");
 	}
 	
-	public void loadMapping(String mappingfilename){
+	public void loadMapping(String mappingfilename) throws FileNotFoundException{
+		Reader reader = new FileReader(mappingfilename);
 		Gson gson = new Gson();
-		this.mapping=gson.fromJson(mappingfilename, WumpusBoardMapping.class);
+		this.mapping=gson.fromJson(reader, WumpusBoardMapping.class);
 	}
 	
 	public WumpusPlan getPlan(){

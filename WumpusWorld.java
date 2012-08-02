@@ -10,6 +10,8 @@ import info2.wumpusworld.environment.WumpusHardcodedAgent;
 import info2.wumpusworld.environment.WumpusLocTrackEnvView;
 import info2.wumpusworld.environment.WumpusUtils;
 import info2.wumpusworld.map.BidirectionalAStarRouteCalculator;
+import info2.wumpusworld.plan.WumpusPlan;
+import info2.wumpusworld.plan.WumpusPlans;
 import aima.core.agent.Environment;
 import aima.core.agent.EnvironmentView;
 
@@ -27,14 +29,17 @@ public class WumpusWorld {
 			e.printStackTrace();
 		}
 		List<Problem> pl=problems.getProblems();
+		WumpusPlans plans = new WumpusPlans();
 		for(Problem problem : pl){
 			Environment env = new WumpusEnvironment();
-			WumpusLocTrackEnvView view= new WumpusLocTrackEnvView();
+			WumpusLocTrackEnvView view= new WumpusLocTrackEnvView(osmfile, mappingfile);
 			env.addEnvironmentView(view);
 			env.addAgent(new WumpusHardcodedAgent());
 			env.stepUntilDone();
-			System.out.print(view.toString());
+			plans.addPlan(view.getPlan());
+			System.out.println(view.toString());
 		}
+		System.out.println(plans.toJson());
 		
 
 		// TODO generar lista de MapNode y calcular ruta
