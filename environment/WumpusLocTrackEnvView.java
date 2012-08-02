@@ -1,5 +1,9 @@
 package info2.wumpusworld.environment;
 
+import info2.wumpusworld.plan.WumpusPlan;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +12,14 @@ import aima.core.agent.Agent;
 import aima.core.agent.EnvironmentState;
 import aima.core.agent.EnvironmentView;
 import aima.core.util.datastructure.XYLocation;
+import aimax.osm.data.MapBuilder;
+import aimax.osm.data.OsmMap;
 import aimax.osm.data.entities.MapNode;
+import aimax.osm.data.impl.DefaultMap;
+import aimax.osm.data.impl.DefaultMapBuilder;
+import aimax.osm.reader.Bz2OsmReader;
+import aimax.osm.reader.MapReader;
+import aimax.osm.routing.agent.MapAdapter;
 
 
 /*
@@ -16,9 +27,34 @@ import aimax.osm.data.entities.MapNode;
  * la lista se puede retirar con el metodo getLocationList
  */
 public class WumpusLocTrackEnvView implements EnvironmentView{
+	OsmMap osmmap=null;
 	ArrayList<XYLocation> listapasos = null;
-	public WumpusLocTrackEnvView() {
+	WumpusPlan plan = null;
+	
+	/*
+	 * @param osmmapfilename nombre del archivo de mapa osm
+	 */
+	public WumpusLocTrackEnvView(String osmmapfilename) {
 		listapasos = new ArrayList<XYLocation>();
+		plan = new WumpusPlan();
+		try{
+			InputStream is = new FileInputStream(osmmapfilename);
+			readMap(is);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	/** Reads a map from the specified stream and stores it in {@link #map}. */
+	public void readMap(InputStream stream) {
+		if (stream != null) {
+			MapReader mapReader = new Bz2OsmReader();
+			MapBuilder mapBuilder = new DefaultMapBuilder();
+			mapReader.readMap(stream, mapBuilder);
+			osmmap = mapBuilder.buildMap();
+		}
+		else
+			System.err.println("Map reading failed because input stream does not exist.");
 	}
 	
 	public List<MapNode> toMapNodeList(){

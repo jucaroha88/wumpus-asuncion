@@ -37,9 +37,39 @@ public class BidirectionalAStarRouteCalculator {
 		return new String[] { "Distance", "Distance (Car)", "Distance (Bike)" };
 	}
 	
-	ArrayList<MapNode> findNodePath(MapNode fromNode, MapNode toNode){
+	ArrayList<MapNode> findNodePath(MapNode fromNode, MapNode toNode, OsmMap map){
+		try {
+			int waySelection = 1; // para ways de autos
+			MapWayFilter wayFilter = createMapWayFilter(map, waySelection);
+			boolean ignoreOneways = true;
+			MapAdapter map_adapter = new MapAdapter(map);
+			HeuristicFunction hf = createHeuristicFunction(toNode,
+					map_adapter);
+			Problem problem = createProblem(fromNode, toNode, map,
+					wayFilter, ignoreOneways, waySelection);
+			
+			Search search = new AStarBidirectionalSearch(hf);
+			List<Action> actions = search.search(problem);
+			
+			ArrayList<MapNode> resultnodepath = new ArrayList<MapNode>();
+			resultnodepath.add(fromNode);
+			if (!actions.isEmpty()){
+				for (Object action : actions) {
+					if (action instanceof OsmMoveAction) {
+						OsmMoveAction a = (OsmMoveAction) action;
+						for (MapNode node : a.getNodes())
+							if (!node.equals(a.getFrom()))
+								/*result.add(new Position(node.getLat(), node
+										.getLon()));*/
+								resultnodepath.add(node);
+					}
+				}
+			}
+			return resultnodepath;
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		return null;
-		
 	}
 
 	/**
