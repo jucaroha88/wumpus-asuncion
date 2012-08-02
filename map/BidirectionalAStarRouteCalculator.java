@@ -37,7 +37,7 @@ public class BidirectionalAStarRouteCalculator {
 		return new String[] { "Distance", "Distance (Car)", "Distance (Bike)" };
 	}
 	
-	ArrayList<MapNode> findNodePath(MapNode fromNode, MapNode toNode, OsmMap map){
+	public ArrayList<MapNode> findNodePath(MapNode fromNode, MapNode toNode, OsmMap map){
 		try {
 			int waySelection = 1; // para ways de autos
 			MapWayFilter wayFilter = createMapWayFilter(map, waySelection);

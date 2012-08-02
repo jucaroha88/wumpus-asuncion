@@ -170,4 +170,14 @@ public abstract class WumpusUtils {
 		return problem;	
 	}
 	
+	public static MapNode XYLocationToMapNode(WumpusBoardMapping mapping, XYLocation xylocation){
+		List<BoardNodeRelation> relations = mapping.getMapping();
+		for(BoardNodeRelation rel : relations){
+			BoardPosition bp = rel.getBoardPosition();
+			if(bp.getCol() == xylocation.getXCoOrdinate() && bp.getRow() == xylocation.getYCoOrdinate()){
+				return new DefaultMapNode(rel.getNodeId());
+			}
+		}
+		return null;
+	}
 }
