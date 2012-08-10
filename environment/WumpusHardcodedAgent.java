@@ -33,7 +33,7 @@ class WumpusHardcodedAgentProgram implements AgentProgram {
 
 	@Override
 	public Action execute(Percept percept) {
-		System.out.println(percept.toString());
+//		System.out.println(percept.toString());
 		if(paso<acciones.length){
 			return acciones[paso++];
 		}

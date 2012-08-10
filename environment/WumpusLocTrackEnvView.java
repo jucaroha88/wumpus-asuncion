@@ -103,7 +103,7 @@ public class WumpusLocTrackEnvView implements EnvironmentView{
 	@Override
 	public void agentActed(Agent agent, Action action,
 			EnvironmentState resultingState) {
-		System.out.println(action.toString());
+//		System.out.println(action.toString());
 		if(action==WumpusEnvironment.ACTION_AVANZAR){
 			XYLocation newloc = ((WumpusEnvironmentState)resultingState).getCurrentLocationFor(agent);
 			listapasos.add(newloc);
