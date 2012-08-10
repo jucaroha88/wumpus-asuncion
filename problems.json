@@ -1,0 +1,1 @@
+{"problems":[{"wumpus":{"row":2,"col":1},"gold":{"row":2,"col":2},"pits":[{"row":1,"col":4},{"row":2,"col":3},{"row":4,"col":3}]},{"wumpus":{"row":2,"col":1},"gold":{"row":3,"col":4},"pits":[{"row":1,"col":4},{"row":3,"col":1},{"row":3,"col":3}]}]}
